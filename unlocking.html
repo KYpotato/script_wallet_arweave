@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>Unlocking script</title>
+        <script type="text/javascript" src="./unlocking.js"></script>
+    </head>
+    <body>
+        <h1>Unlocking script</h1>
+        <div>
+        txid<textarea id="txid" name="txid" rows="1" cols="70"></textarea><br>
+        output index<textarea id="output_index" name="output_index" rows="1" cols="5"></textarea><br>
+        value(satoshi)<textarea id="value" name="value" rows="1" cols="5"></textarea><br>
+        redeem script<br>
+        <textarea id="redeemscript" name="redeemscript" rows="5" cols="70"></textarea><br>
+        </div>
+        <div>
+        unlocking script<br>
+        <textarea id="unlockingscript" name="unlockingscript" rows="5" cols="70"></textarea><br>
+        send to <textarea id="target_address" name="target_address" rows="1" cols="70"></textarea><br>
+        fee(satoshi)<textarea id="fee" name="fee" rows="1" cols="5"></textarea><br>
+        </div>
+        <button type="button" id="send" name="send" 
+            onclick='publish_tx_from_p2sh(
+                document.getElementById("txid").value, 
+                Number(document.getElementById("output_index").value), 
+                document.getElementById("redeemscript").value,
+                document.getElementById("unlockingscript").value,
+                document.getElementById("target_address").value,
+                Number(document.getElementById("value").value),
+                Number(document.getElementById("fee").value))'>send</button><br>
+        result: <label id="result"></label>
+    </body>
+</html>
