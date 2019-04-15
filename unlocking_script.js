@@ -1,5 +1,4 @@
 const bitcoin = require('bitcoinjs-lib');
-const base58check = require('base58check');
 const settings = require('./settings');
 const common_btc = require('./common_btc');
 

@@ -12,11 +12,16 @@ function gen_address(script_string){
     document.getElementById('address_qr').src = '';
     document.getElementById('address_qr').style.visibility = "hidden";
 
-    let address = common_btc.gen_script_address(script_string);
-    
-    document.getElementById('address').innerText = address;
-    
-    document.getElementById('address_qr').src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chco=000000&chl=bitcoin:" + address;
-    document.getElementById('address_qr').style.visibility = "visible";
+    try{
+        let address = common_btc.gen_script_address(script_string);
+        
+        document.getElementById('address').innerText = address;
+        
+        document.getElementById('address_qr').src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chco=000000&chl=bitcoin:" + address;
+        document.getElementById('address_qr').style.visibility = "visible";
+    }
+    catch(error){
+        alert(error);
+    }
 
 }
