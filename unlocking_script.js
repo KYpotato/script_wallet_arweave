@@ -20,6 +20,8 @@ function get_utxos(address){
 
 function publish_tx_from_p2sh(txid, output_index, redeem_script, unlocking_script, target_address, value, fee){
 
+    document.getElementById('result').innerText = '';
+
     if(!redeem_script || !unlocking_script || !target_address){
         alert("redeem script, unlocking script and target address is needed");
     }
@@ -28,24 +30,35 @@ function publish_tx_from_p2sh(txid, output_index, redeem_script, unlocking_scrip
         fee = settings.default_fee;
     }
 
-    let utxos;
-    if(!txid || !output_index || !value){
-        utxos = common_btc.get_utxos(common_btc.gen_script_address(redeem_script));
-    }
-    else{
-        utxos = {
-            txid: txid,
-            output_idx: output_index,
-            value_satoshi: value}
-    }
+    try{
+        let utxos;
+        if(!txid || !output_index || !value){
+            utxos = common_btc.get_utxos(common_btc.gen_script_address(redeem_script));
+        }
+        else{
+            utxos = {
+                txid: txid,
+                output_idx: output_index,
+                value_satoshi: value}
+        }
 
-    let rawtx = gen_tx_from_p2sh(utxos, redeem_script, unlocking_script, target_address, fee);
+        if(utxos.length < 1){
+            alert('there are no utxo on the address of the redeem script.');
+            return;
+        }
 
-    if(common_btc.broadcast(rawtx)){
-        document.getElementById('result').innerText = 'unlock success';
+        let rawtx = gen_tx_from_p2sh(utxos, redeem_script, unlocking_script, target_address, fee);
+
+        if(common_btc.broadcast(rawtx)){
+            document.getElementById('result').innerText = 'unlock success';
+        }
+        else{
+            document.getElementById('result').innerText = 'error';
+        }
     }
-    else{
-        document.getElementById('result').innerText = 'error';
+    catch(error){
+        alert(error);
+        return;
     }
 }
 

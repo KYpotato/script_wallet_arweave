@@ -34,7 +34,8 @@ exports.get_utxos = function(address){
         }
         else{
             ret_utxos = null;
-            console.log('error: ' + responce.statusCode);
+            console.log('error(get utxo): ' + responce.statusCode);
+            throw new Error('error(get utxo): ' + responce.statusCode);
         }
     }
     else if(settings.api == settings.API.BLOCK_CYPHER){
@@ -66,7 +67,8 @@ exports.get_utxos = function(address){
         }
         else{
             ret_utxos = null;
-            console.log('error: ' + responce.statusCode);
+            console.log('error(get utxo): ' + responce.statusCode);
+            throw new Error('error(get utxo): ' + responce.statusCode);
             //{"error": "Address tb1qt0arta2hdeh34hfjksza3u3fvxwksrl9mt5ny5 is invalid: Address tb1qt0arta2hdeh34hfjksza3u3fvxwksrl9mt5ny5 is of unknown size."}
         }
     }
@@ -93,8 +95,8 @@ exports.broadcast = function(rawtx){
         ret = true;
     }
     else{
-        console.log('error: '+ responce.statusCode);
-        ret = false;
+        console.log('error(broadcast): '+ responce.statusCode);
+        throw new Error('error(broadcast): '+ responce.statusCode);
     }
 
     console.log(body);

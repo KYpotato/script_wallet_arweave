@@ -7,11 +7,6 @@ window.gen_address = gen_address;
 
 function gen_address(script_string){
 
-    document.getElementById('address').innerText = '';
-
-    document.getElementById('address_qr').src = '';
-    document.getElementById('address_qr').style.visibility = "hidden";
-
     try{
         let address = common_btc.gen_script_address(script_string);
         
@@ -21,6 +16,10 @@ function gen_address(script_string){
         document.getElementById('address_qr').style.visibility = "visible";
     }
     catch(error){
+        document.getElementById('address').innerText = '';
+    
+        document.getElementById('address_qr').src = '';
+        document.getElementById('address_qr').style.visibility = "hidden";
         alert(error);
     }
 
