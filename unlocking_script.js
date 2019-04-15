@@ -4,6 +4,8 @@ const common_btc = require('./common_btc');
 
 const network = settings.network;
 
+window.onload = function(){update_form()};
+window.update_form = update_form;
 window.get_utxos = get_utxos;
 window.publish_tx_from_p2sh = publish_tx_from_p2sh;
 
@@ -97,4 +99,17 @@ function gen_tx_from_p2sh(utxos, redeem_script, unlocking_script, target_address
     console.log(tx.toHex());
 
     return tx.toHex();
+}
+
+function update_form(){
+    let table = document.getElementById('tx_form');
+    let visibility = 'hidden';
+    if(document.getElementById('specify_txid').value == 'all utxo'){
+        visibility = 'hidden';
+    }
+    else if(document.getElementById('specify_txid').value == 'specify a utxo'){
+        visibility = 'visible';
+    }
+
+    table.style.visibility = visibility;
 }

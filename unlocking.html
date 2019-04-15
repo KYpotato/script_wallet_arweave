@@ -8,15 +8,31 @@
     <body>
         <h1>Unlocking script</h1>
         <div>
-        txid<input type="text" id="txid" name="txid" size="70" disabled></input><br>
-        output index<input type="number" id="output_index" name="output_index" min="1" disabled></input><br>
-        value(satoshi)<input type="number" id="value" name="value" min="1" disabled></input><br>
+        <select id="specify_txid" name="specify_txid" onchange="update_form()">
+            <option value="specify a utxo">specify a utxo</option>
+            <option value="all utxo" selected>all utxo</option>
+        </select><br>
+        <div id="txinfo">
+        <table id="tx_form">
+            <tbody id="tx_form_body">
+            <tr>
+                <td><label>txid</label></td><td><input type="text" id="txid" name="txid" size="70"></input></td>
+            </tr>
+            <tr>
+                <td>output index</td><td><input type="number" id="output_index" name="output_index" min="1"></input></td>
+            </tr>
+            <tr>
+                <td>value(satoshi)</td><td><input type="number" id="value" name="value" min="1"></input></td>
+            </tr>
+            </tbody>
+        </table>    
+        </div><br>
         redeem script<br>
         <textarea id="redeemscript" name="redeemscript" rows="5" cols="70"></textarea><br>
         </div>
         <div>
         unlocking script<br>
-        <textarea id="unlockingscript" name="unlockingscript" rows="5" cols="70"></textarea><br>
+        <textarea id="unlockingscript" name="unlockingscript" rows="5" cols="70"></textarea><br><br>
         send to <input id="target_address" name="target_address" size="70"></input><br>
         fee(satoshi)<input type="number" id="fee" name="fee" min="1"></input><br>
         </div>
@@ -28,7 +44,7 @@
                 document.getElementById("unlockingscript").value,
                 document.getElementById("target_address").value,
                 Number(document.getElementById("value").value),
-                Number(document.getElementById("fee").value))'>send</button><br>
+                Number(document.getElementById("fee").value))'>send</button><br><br>
         result: <label id="result"></label>
     </body>
 </html>
