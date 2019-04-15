@@ -8,17 +8,17 @@
     <body>
         <h1>Unlocking script</h1>
         <div>
-        txid<textarea id="txid" name="txid" rows="1" cols="70"></textarea><br>
-        output index<textarea id="output_index" name="output_index" rows="1" cols="5"></textarea><br>
-        value(satoshi)<textarea id="value" name="value" rows="1" cols="5"></textarea><br>
+        txid<input type="text" id="txid" name="txid" size="70" disabled></input><br>
+        output index<input type="number" id="output_index" name="output_index" min="1" disabled></input><br>
+        value(satoshi)<input type="number" id="value" name="value" min="1" disabled></input><br>
         redeem script<br>
         <textarea id="redeemscript" name="redeemscript" rows="5" cols="70"></textarea><br>
         </div>
         <div>
         unlocking script<br>
         <textarea id="unlockingscript" name="unlockingscript" rows="5" cols="70"></textarea><br>
-        send to <textarea id="target_address" name="target_address" rows="1" cols="70"></textarea><br>
-        fee(satoshi)<textarea id="fee" name="fee" rows="1" cols="5"></textarea><br>
+        send to <input id="target_address" name="target_address" size="70"></input><br>
+        fee(satoshi)<input type="number" id="fee" name="fee" min="1"></input><br>
         </div>
         <button type="button" id="send" name="send" 
             onclick='publish_tx_from_p2sh(
