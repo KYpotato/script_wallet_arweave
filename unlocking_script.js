@@ -6,10 +6,24 @@ const network = settings.network;
 
 window.onload = function(){update_form()};
 window.update_form = update_form;
-window.get_utxos = get_utxos;
+window.display_total_balance = display_total_balance;
 window.publish_tx_from_p2sh = publish_tx_from_p2sh;
 
-function get_utxos(address){
+function display_total_balance(){
+    document.getElementById('total_balance').innerText = '';
+    try{
+        document.getElementById('total_balance').innerText = 
+            "total balance: " + 
+            get_total_balance(common_btc.gen_script_address(document.getElementById("redeemscript").value)) + 
+            ' satoshi';
+        document.getElementById('total_balance').style.visibility = 'visible';
+    }
+    catch(error){
+        alert(error);
+    }
+}
+
+function get_total_balance(address){
     let utxos = common_btc.get_utxos(address);
 
     let total_balance = 0;
