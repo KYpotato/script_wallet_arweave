@@ -6,10 +6,13 @@ const settings = require('./settings');
 const network = settings.network;
 
 exports.get_utxos = function(address){
+    console.log('--get_utxos--');
+    console.log(address);
     let ret_utxos;
 
-    if(settings.api == settings.API.CAHIN_SO){
+    if(settings.api == settings.API.CHAIN_SO){
         // chain.so
+        console.log('chain.so');
         let target_network;
         if(network == bitcoin.networks.bitcoin){
             target_network = "BTC";
@@ -40,6 +43,7 @@ exports.get_utxos = function(address){
     }
     else if(settings.api == settings.API.BLOCK_CYPHER){
         // block cypher
+        console.log('block cypher');
         let target_network;
         if(network == bitcoin.networks.bitcoin){
             target_network = "main";
