@@ -9,12 +9,12 @@ window.update_form = update_form;
 window.display_total_balance = display_total_balance;
 window.publish_tx_from_p2sh = publish_tx_from_p2sh;
 
-function display_total_balance(){
+async function display_total_balance(){
     document.getElementById('total_balance').innerText = '';
     try{
         document.getElementById('total_balance').innerText = 
             "total balance: " + 
-            get_total_balance(common_btc.gen_script_address(document.getElementById("redeemscript").value)) + 
+            await get_total_balance(common_btc.gen_script_address(document.getElementById("redeemscript").value)) + 
             ' satoshi';
         document.getElementById('total_balance').style.visibility = 'visible';
     }
@@ -23,8 +23,8 @@ function display_total_balance(){
     }
 }
 
-function get_total_balance(address){
-    let utxos = common_btc.get_utxos(address);
+async function get_total_balance(address){
+    let utxos = await common_btc.get_utxos(address);
 
     let total_balance = 0;
     for(utxo of utxos){
@@ -34,7 +34,7 @@ function get_total_balance(address){
     return total_balance;
 }
 
-function publish_tx_from_p2sh(txid, output_index, redeem_script, unlocking_script, target_address, value, fee){
+async function publish_tx_from_p2sh(txid, output_index, redeem_script, unlocking_script, target_address, value, fee){
 
     document.getElementById('result').innerText = '';
 
@@ -49,7 +49,7 @@ function publish_tx_from_p2sh(txid, output_index, redeem_script, unlocking_scrip
     try{
         let utxos;
         if(!txid || !output_index || !value){
-            utxos = common_btc.get_utxos(common_btc.gen_script_address(redeem_script));
+            utxos = await common_btc.get_utxos(common_btc.gen_script_address(redeem_script));
         }
         else{
             utxos = {
@@ -65,7 +65,7 @@ function publish_tx_from_p2sh(txid, output_index, redeem_script, unlocking_scrip
 
         let rawtx = gen_tx_from_p2sh(utxos, redeem_script, unlocking_script, target_address, fee);
 
-        if(common_btc.broadcast(rawtx)){
+        if(await common_btc.broadcast(rawtx)){
             document.getElementById('result').innerText = 'unlock success';
         }
         else{

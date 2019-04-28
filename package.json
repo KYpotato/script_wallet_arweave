@@ -13,6 +13,7 @@
     "base58check": "^2.0.0",
     "bitcoinjs-lib": "^5.0.1",
     "browserify": "^16.2.3",
-    "sync-request": "^6.1.0"
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   }
 }

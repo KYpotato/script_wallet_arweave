@@ -1,14 +1,15 @@
 const bitcoin = require('bitcoinjs-lib');
 const base58check = require('base58check');
-const request = require('sync-request');
+const request = require('request');
+const rp = require('request-promise');
 const settings = require('./settings');
 
 const network = settings.network;
 
-exports.get_utxos = function(address){
+exports.get_utxos = async function(address){
     console.log('--get_utxos--');
     console.log(address);
-    let ret_utxos;
+    let ret_utxos = new Array();
 
     if(settings.api == settings.API.CHAIN_SO){
         // chain.so
@@ -21,86 +22,82 @@ exports.get_utxos = function(address){
             target_network = "BTCTEST";
         }
         const url = 'https://chain.so/api/v2/get_tx_unspent/' + target_network + '/' + address;
-        let responce = request('GET', url);
-
-        if(responce.statusCode == 200){
-            let body = JSON.parse(responce.body);
-            console.log(body.data.txs);
-            ret_utxos = new Array();
-            for(let i = 0; i < body.data.txs.length; i++){
+        let request_op = {
+            url: url,
+            method: 'GET',
+            json: true
+        }
+        let responce = await rp(request_op).catch(e =>{
+            console.log('get utxo fail: ' + e);
+            throw new Error('get utxo fail: ' + e);
+        })
+        console.log(responce);
+        
+        if(responce != null && responce.status == "success"){
+            console.log(responce.data.txs);
+            for(let i = 0; i < responce.data.txs.length; i++){
                 ret_utxos[i] = {
-                    txid: body.data.txs[i].txid,
-                    output_idx: body.data.txs[i].output_no,
-                    value_satoshi: Number(body.data.txs[i].value.replace('.', ''))
+                    txid: responce.data.txs[i].txid,
+                    output_idx: responce.data.txs[i].output_no,
+                    value_satoshi: Number(responce.data.txs[i].value.replace('.', ''))
                 };
             }
         }
         else{
-            ret_utxos = null;
-            console.log('error(get utxo): ' + responce.statusCode);
-            throw new Error('error(get utxo): ' + responce.statusCode);
+            console.log('error(get utxo): ' + (responce == null? 'responce null': responce.status));
+            throw new Error('error(get utxo)' + (responce == null? 'responce null': responce.status));
         }
     }
-    else if(settings.api == settings.API.BLOCK_CYPHER){
-        // block cypher
-        console.log('block cypher');
-        let target_network;
-        if(network == bitcoin.networks.bitcoin){
-            target_network = "main";
-        }
-        else{
-            target_network = "test3";
-        }
-        const url = 'https://api.blockcypher.com/v1/btc/' + target_network + '/addrs/' + address;
-        let responce = request('GET', url, {flags: {'unspentOnly': 'true'}});
+    else if(settings.api == settings.API.MY_NODE){
 
-        if(responce.statusCode == 200){
-            let body = JSON.parse(responce.body);
-            console.log(body.txrefs);
-            ret_utxos = new Array();
-            let i = 0;
-            for(let utxo of body.txrefs){
-                if(utxo.spent != undefined && utxo.spent != true){
-                    ret_utxos[i++] = {
-                        txid: utxo.tx_hash,
-                        output_idx: utxo.tx_output_n,
-                        value_satoshi: utxo.value
-                    }
-                }
-            }
-        }
-        else{
-            ret_utxos = null;
-            console.log('error(get utxo): ' + responce.statusCode);
-            throw new Error('error(get utxo): ' + responce.statusCode);
-            //{"error": "Address tb1qt0arta2hdeh34hfjksza3u3fvxwksrl9mt5ny5 is invalid: Address tb1qt0arta2hdeh34hfjksza3u3fvxwksrl9mt5ny5 is of unknown size."}
-        }
+    }
+    else{
+        console.log('not applicable API server.');
+        throw new Error('not applicable API server.')
     }
     return ret_utxos;
 }
 
-exports.broadcast = function(rawtx){
+exports.broadcast = async function(rawtx){
     let body;
     let ret;
 
-    // chain.so
-    let target_network;
-    if(network == bitcoin.networks.bitcoin){
-        target_network = "BTC";
+    if(settings.api == settings.API.CHAIN_SO){
+        // chain.so
+        let target_network;
+        if(network == bitcoin.networks.bitcoin){
+            target_network = "BTC";
+        }
+        else{
+            target_network = "BTCTEST";
+        }
+        const uri = 'https://chain.so/api/v2/send_tx/' + target_network;
+        let request_op = {
+            url: uri,
+            method: 'POST',
+            headers: {"content-type": "application/json"},
+            json: {tx_hex: rawtx}
+        }
+        let responce = await rp(request_op).catch(e => {
+            console.log('broadcast tx fail: ' + e);
+            throw new Error('broadcast tx fail: ' + e);
+        })
+        console.log(responce);
+        if(responce.status == 'success'){
+            console.log(responce);
+            ret = true;
+        }
+        else{
+            console.log('error(broadcast): '+ responce.status);
+            throw new Error('error(broadcast): '+ responce.status);
+        }
+    }
+    else if(settings.api == settings.API.MY_NODE){
+
     }
     else{
-        target_network = "BTCTEST";
-    }
-    const uri = 'https://chain.so/api/v2/send_tx/' + target_network;
-    let responce = request('POST', uri, {json: {tx_hex: rawtx}});
-    if(responce.statusCode == 200){
-        body = JSON.parse(responce.getBody('utf-8'));
-        console.log(body);
-        ret = true;
-    }
-    else{
-        console.log('error(broadcast): '+ responce.statusCode);
-        throw new Error('error(broadcast): '+ responce.statusCode);
+        console.log('not applicable API server.');
+        throw new Error('not applicable API server.')
     }
 
     console.log(body);
@@ -150,4 +147,52 @@ exports.gen_script_address = function(script_string){
     console.log();
 
     return base58encode_script;
+}
+
+
+
+
+exports.btc_cli_command = async function(method, ...params){
+    let ret = await dispatch(settings.rpcip, settings.rpcport, settings.username, settings.rpspassword, method, ...params).catch((err) => console.log(err));
+    if(ret.result != null){
+        console.log('result');
+        console.log(ret.result);
+    }
+    if(ret.error != null){
+        console.log('error');
+        console.log(ret.error);
+    }
+    return ret;
+}
+
+const dispatch = async (host, rpcport, user, pass, method, ...params) => {
+    return { result, error } = JSON.parse(
+        await rp(`http://${host}:${rpcport}`, {
+            method: 'POST',
+            body: JSON.stringify({ method, params }),
+            auth: { user, pass },
+        }).catch(e => {
+            if (e.statusCode) {
+            return JSON.stringify({ error: JSON.parse(e.error).error })
+            } else {
+            return JSON.stringify({ error: e.error })
+            }
+        })
+    )
+}
+
+function request_promise(options){
+
+    return new Promise((resolve, reject) => {
+        request(options, (error, res, body) => {
+            if(!error && res.statusCode == 200){
+                console.log('responce OK');
+                resolve(body);
+            }
+            else{
+                console.log('responce error: ' + res.statusCode);
+                reject(error);
+            }
+        })
+    })
 }
