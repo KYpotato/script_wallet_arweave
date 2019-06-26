@@ -14,13 +14,13 @@ install npm
 generate BTC address  
 1. Open "locking.html"  
 2. Input your locking script on redeem script.  
-   Below op_code is not supported.
+   Below op_code is not supported.  
    "OP_CODESEPARATOR",  
    "OP_CHECKSIG",  
    "OP_CHECKSIGVERIFY",  
    "OP_CHECKMULTISIG",  
-   "OP_CHECKMULTISIGVERIFY",
-   "OP_CHECKLOCKTIMEVERIFY",
+   "OP_CHECKMULTISIGVERIFY",  
+   "OP_CHECKLOCKTIMEVERIFY",  
    "OP_NOP2",  
    "OP_CHECKSEQUENCEVERIFY",  
    "OP_NOP3"  
