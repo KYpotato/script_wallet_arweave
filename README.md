@@ -12,7 +12,7 @@ install npm
 
 ## Usage
 generate BTC address  
-1. Open "locking.html"  
+1. Open "btc_script.html"  
 2. Input your locking script on redeem script.  
    Below op_code is not supported.  
    "OP_CODESEPARATOR",  
@@ -28,7 +28,7 @@ generate BTC address
 4. Send BTC(testnet) to the address by your btc wallet.  
 
 spend BTC  
-1. Open "unlocking.html"  
+1. Open "btc_script.html"  
 2. Input locking script that used for generating the address.  
 3. Input unlocking script to unlock the BTC on the address.  
 4. Input your BTC address(testnet) to receive the BTC.  
@@ -40,7 +40,6 @@ spend BTC
 `git clone https://github.com/KYpotato/script_wallet.git`  
 `cd script_wallet`  
 `npm install`  
-`browserify ./locking_script.js -o ./locking.js`  
-`browserify ./unlocking_script.js -o ./unlocking.js`  
+`browserify ./btc_script.js -o ./btc.js`  
   
 
