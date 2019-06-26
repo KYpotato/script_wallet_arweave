@@ -6,6 +6,18 @@ const settings = require('./settings');
 
 const network = settings.network;
 
+const filter = [
+    "OP_CODESEPARATOR",
+    "OP_CHECKSIG",
+    "OP_CHECKSIGVERIFY",
+    "OP_CHECKMULTISIG",
+    "OP_CHECKMULTISIGVERIFY",
+    "OP_CHECKLOCKTIMEVERIFY",
+    "OP_NOP2",
+    "OP_CHECKSEQUENCEVERIFY",
+    "OP_NOP3"
+]
+
 exports.get_utxos = async function(address){
     console.log('--get_utxos--');
     console.log(address);
@@ -106,6 +118,13 @@ exports.broadcast = async function(rawtx){
 
 
 exports.gen_script_address = function(script_string){
+
+    // check filter
+    filter.forEach((opcode) => {
+        if(-1 != script_string.toUpperCase().indexOf(opcode)) {
+            throw new Error(opcode + ' is not supported on this app.')
+        }
+    })
 
     // script
     console.log('script');
