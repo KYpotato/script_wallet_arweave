@@ -37,9 +37,9 @@ spend BTC
   
   
 ## install
-`git clone https://github.com/KYpotato/script_wallet.git`
-`cd script_wallet`
-`npm install`   
+`git clone https://github.com/KYpotato/script_wallet.git`  
+`cd script_wallet`  
+`npm install`  
 `browserify ./locking_script.js -o ./locking.js`  
 `browserify ./unlocking_script.js -o ./unlocking.js`  
   
