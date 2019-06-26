@@ -1,6 +1,5 @@
 const bitcoin = require('bitcoinjs-lib');
 const base58check = require('base58check');
-const request = require('request');
 const rp = require('request-promise');
 const settings = require('./settings');
 
@@ -198,20 +197,4 @@ const dispatch = async (host, rpcport, user, pass, method, ...params) => {
             }
         })
     )
-}
-
-function request_promise(options){
-
-    return new Promise((resolve, reject) => {
-        request(options, (error, res, body) => {
-            if(!error && res.statusCode == 200){
-                console.log('responce OK');
-                resolve(body);
-            }
-            else{
-                console.log('responce error: ' + res.statusCode);
-                reject(error);
-            }
-        })
-    })
 }
