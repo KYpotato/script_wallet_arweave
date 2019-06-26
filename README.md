@@ -12,7 +12,7 @@ install npm
 
 ## Usage
 generate BTC address  
-1. Open "btc_script.html"  
+1. Open "btc_script.html" or access "https://arweave.net/SHc83birOqHdZ2CLrRVUVdraE7J4Z1JAcVW90dbp9sc"  
 2. Input your locking script on redeem script.  
    Below op_code is not supported.  
    "OP_CODESEPARATOR",  
@@ -28,7 +28,7 @@ generate BTC address
 4. Send BTC(testnet) to the address by your btc wallet.  
 
 spend BTC  
-1. Open "btc_script.html"  
+1. Open "btc_script.html" or access "https://arweave.net/SHc83birOqHdZ2CLrRVUVdraE7J4Z1JAcVW90dbp9sc"  
 2. Input locking script that used for generating the address.  
 3. Input unlocking script to unlock the BTC on the address.  
 4. Input your BTC address(testnet) to receive the BTC.  
